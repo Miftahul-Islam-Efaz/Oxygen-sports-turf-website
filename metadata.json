@@ -1,0 +1,6 @@
+{
+  "name": "OxygenSports",
+  "description": "High-performance sports infrastructure landing page featuring customized SVG geometry-warping brand headers, ambient night-view visuals, and interactive controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

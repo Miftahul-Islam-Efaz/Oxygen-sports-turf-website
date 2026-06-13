@@ -19,6 +19,18 @@ export default function App() {
   const [activeDropdown, setActiveDropdown] = useState<"game" | "date" | null>(null);
   const [bookingStatus, setBookingStatus] = useState<"searching" | "booked" | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
   // Close drop-downs when clicking outside
   React.useEffect(() => {
@@ -83,8 +95,8 @@ export default function App() {
 
   // Warp calculations
   const top_side = 0;
-  const bottom_side = 295;
-  const bottom_center = 120;
+  const bottom_side = isMobile ? 750 : 295;
+  const bottom_center = isMobile ? 320 : 120;
   const cx = totalWidth / 2;
 
   const curve_top = () => top_side;
@@ -254,7 +266,7 @@ export default function App() {
         {/* Hero Brand Header Area */}
         <main className="hero-main" id="hero-main-content">
           <div id="svg-text-container" className="svg-text-container">
-            <svg viewBox={`0 0 ${totalWidth} 300`} xmlns="http://www.w3.org/2000/svg" className={pulse ? "fade-in-text" : ""}>
+            <svg viewBox={`0 0 ${totalWidth} ${isMobile ? 760 : 300}`} xmlns="http://www.w3.org/2000/svg" className={pulse ? "fade-in-text" : ""}>
               {letterPositions.map((pos, idx) => (
                 <path
                   key={idx}
@@ -289,6 +301,11 @@ export default function App() {
       <BookingSection />
 
       <GallerySection />
+
+      {/* Dedicated visual spacer to move the footer section down and provide premium negative space */}
+      <div id="gallery-footer-spacer" className="h-24 sm:h-36 md:h-48 bg-black flex items-center justify-center pointer-events-none">
+        <div className="w-[1px] h-16 bg-gradient-to-b from-neutral-800 to-transparent" />
+      </div>
 
       <FooterSection />
     </div>

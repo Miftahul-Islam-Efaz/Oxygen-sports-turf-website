@@ -68,7 +68,7 @@ export default function MenuOverlay({
                         el.scrollIntoView({ behavior: "smooth" });
                       }
                     }, 250);
-                  } else if (item.title === "BOOK NOW" || item.title === "BOOKING") {
+                  } else if (item.title === "BOOK NOW" || item.title === "BOOKING" || item.title === "CONTACT") {
                     setTimeout(() => {
                       const el = document.getElementById("booking");
                       if (el) {

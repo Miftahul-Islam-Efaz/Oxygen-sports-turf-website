@@ -342,17 +342,26 @@ export default function DomeGallery({
       onDragStart: ({ event }) => {
         if (focusedElRef.current) return;
         stopInertia();
-        const evt = event as any;
         draggingRef.current = true;
         movedRef.current = false;
         startRotRef.current = { ...rotationRef.current };
-        startPosRef.current = { x: evt.clientX, y: evt.clientY };
       },
-      onDrag: ({ event, last, velocity = [0, 0], direction = [0, 0], movement }) => {
-        if (focusedElRef.current || !draggingRef.current || !startPosRef.current) return;
-        const evt = event as any;
-        const dxTotal = evt.clientX - startPosRef.current.x;
-        const dyTotal = evt.clientY - startPosRef.current.y;
+      onDrag: ({ last, velocity = [0, 0], direction = [0, 0], movement, first, cancel }) => {
+        if (focusedElRef.current || !draggingRef.current) return;
+        
+        const [mx, my] = movement;
+
+        // On mobile, if swipe direction is predominantly vertical, cancel drag and allow native page scrolling.
+        if (first && window.innerWidth < 768) {
+          if (Math.abs(my) > Math.abs(mx)) {
+            cancel();
+            draggingRef.current = false;
+            return;
+          }
+        }
+
+        const dxTotal = mx;
+        const dyTotal = my;
         if (!movedRef.current) {
           const dist2 = dxTotal * dxTotal + dyTotal * dyTotal;
           if (dist2 > 16) movedRef.current = true;
@@ -374,7 +383,6 @@ export default function DomeGallery({
           let vx = vMagX * dirX;
           let vy = vMagY * dirY;
           if (Math.abs(vx) < 0.001 && Math.abs(vy) < 0.001 && Array.isArray(movement)) {
-            const [mx, my] = movement;
             vx = clamp((mx / dragSensitivity) * 0.02, -1.2, 1.2);
             vy = clamp((my / dragSensitivity) * 0.02, -1.2, 1.2);
           }
